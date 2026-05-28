@@ -1,0 +1,8 @@
+format: jb-article
+root: README
+sections:
+- file: notebooks/Index
+- file: notebooks/01-Single-Spatial-View
+- file: notebooks/02-Multiple-Views
+- file: notebooks/03-Available-View-Types
+- file: notebooks/04-Coordinated-Multiple-Views

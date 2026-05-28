@@ -1,0 +1,3 @@
+jupyter-book==0.13.0
+pandas
+vitessce[all]==3.9.0

@@ -1,0 +1,7 @@
+title: Vitessce Tutorial
+author: Mark Keller, Eric Moerth, Nils Gehlenborg
+logo: 'images/vitessce-logo.png'
+html:
+  favicon: "images/favicon.ico"
+repository:
+    url: "https://github.com/vitessce/vitessce-python-tutorial-2026"
