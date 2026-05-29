@@ -1,7 +1,5 @@
 # Single-Cell and Spatial Data Visualization with Vitessce
 
-![vitessce examples](https://user-images.githubusercontent.com/9922882/109852545-e05f3400-7c22-11eb-90f3-7371e4ddeb42.png)
-
 
 Welcome! Here you will find the source material for the Vitessce tutorial, presented at ISMB 2026.
 
