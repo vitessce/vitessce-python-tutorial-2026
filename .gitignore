@@ -3,3 +3,6 @@ _build/
 .ipynb_checkpoints/
 *.bed
 .DS_Store
+notebooks/data
+references/
+Untitled.ipynb
