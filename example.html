@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vitessce Example</title>
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            margin: 0;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+        }
+        #root {
+            flex: 1;
+        }
+        #root .vitessce-container {
+            height: max(100%,100vh);
+            width: 100%;
+            overflow: hidden;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="root">Loading...</div>
+
+    <!-- Paste your Vitessce JSON configuration within the script tag below -->
+    <script type="vitessce/json">
+        {"version": "1.0.18", "name": "Initial Properties Example", "description": "", "datasets": [{"uid": "A", "name": "Kuppe et al 2022", "files": [{"fileType": "image.ome-zarr", "url": "https://vitessce-data.storage.googleapis.com/0.0.33/main/kuppe-2022/kuppe_2022_nature.visium.ome.zarr"}]}], "coordinationSpace": {"dataset": {"A": "A"}, "spatialZoom": {"A": -2}, "spatialTargetX": {"A": 300.0}, "spatialTargetY": {"A": 300.0}}, "layout": [{"component": "spatialBeta", "coordinationScopes": {"dataset": "A", "spatialZoom": "A", "spatialTargetX": "A", "spatialTargetY": "A"}, "x": 0, "y": 0, "w": 12, "h": 12}], "initStrategy": "auto"}
+    </script>
+
+
+    <!-- The code below loads React and Vitessce, and renders the Vitessce component using the config above -->
+    <script type="module">
+        let importWithMap;
+        try {
+            importWithMap = (await import('https://unpkg.com/dynamic-importmap@0.1.0')).importWithMap;
+        } catch(e) {
+            console.warn("Import of dynamic-importmap failed, trying fallback.");
+            importWithMap = (await import('https://cdn.vitessce.io/dynamic-importmap@0.1.0/dist/index.js')).importWithMap;
+        }
+
+        const jsPackageVersion = "3.9.11";
+
+        const successfulImportMap = {
+            imports: {
+
+            },
+        };
+        const importMap = {
+            imports: {
+                "react": "https://esm.sh/react@18.2.0?dev",
+                "react-dom": "https://esm.sh/react-dom@18.2.0?dev",
+                "react-dom/client": "https://esm.sh/react-dom@18.2.0/client?dev",
+                "vitessce": `https://unpkg.com/vitessce@${jsPackageVersion}`,
+            },
+        };
+        const fallbackImportMap = {
+            imports: {
+                "react": "https://cdn.vitessce.io/react@18.2.0/index.js",
+                "react-dom": "https://cdn.vitessce.io/react-dom@18.2.0/index.js",
+                "react-dom/client": "https://cdn.vitessce.io/react-dom@18.2.0/es2022/client.mjs",
+                "vitessce": `https://cdn.vitessce.io/vitessce@${jsPackageVersion}/dist/index.min.js`,
+            },
+        };
+
+        async function importWithMapAndFallback(moduleName, importMap, fallbackMap) {
+            let result = null;
+            if (!fallbackMap) {
+                // fallbackMap is null, user may have provided custom JS URL.
+                result = await importWithMap(moduleName, {
+                    imports: {
+                        ...importMap.imports,
+                        ...successfulImportMap.imports,
+                    },
+                });
+                successfulImportMap.imports[moduleName] = importMap.imports[moduleName];
+            } else {
+                try {
+                    result = await importWithMap(moduleName, {
+                        imports: {
+                            ...importMap.imports,
+                            ...successfulImportMap.imports,
+                        },
+                    });
+                    successfulImportMap.imports[moduleName] = importMap.imports[moduleName];
+                } catch (e) {
+                    console.warn(`Importing ${moduleName} failed with importMap`, importMap, "trying fallback", fallbackMap, successfulImportMap);
+                    result = await importWithMap(moduleName, {
+                        imports: {
+                            ...fallbackMap.imports,
+                            ...successfulImportMap.imports,
+                        },
+                    });
+                    successfulImportMap.imports[moduleName] = fallbackMap.imports[moduleName];
+                }
+            }
+            return result;
+        }
+
+        const React = await importWithMapAndFallback("react", importMap, fallbackImportMap);
+        const { createRoot } = await importWithMapAndFallback("react-dom/client", importMap, fallbackImportMap);
+        const { Vitessce } = await importWithMapAndFallback("vitessce", importMap, fallbackImportMap);
+
+        const scriptElement = document.querySelector('script[type="vitessce/json"]');
+
+        const vitessceProps = {
+            theme: 'light2',
+            config: JSON.parse(scriptElement.textContent),
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(React.createElement(Vitessce, vitessceProps));
+    </script>
+  </body>
+</html>
