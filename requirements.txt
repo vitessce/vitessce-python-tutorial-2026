@@ -1,3 +1,6 @@
-jupyter-book==0.13.0
-pandas
+jupyterlab>=3.0.0
 vitessce[all]==3.9.2
+scanpy
+easy-vitessce==0.0.12
+spatialdata==0.7.3
+spatialdata-plot==0.4.0
